@@ -59,7 +59,7 @@ class JWTRelayGatewayFilterFactoryTest {
         String sample_url = "/gateway/service-id/service-id:number/api/test";
 
         // create request with jwt in header
-        String jwt = tokenProvider.createToken(authentication, false);
+        String jwt = tokenProvider.createToken(authentication, false, 1l);
         MockServerHttpRequest request = MockServerHttpRequest
             .get(sample_url)
             .header(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt)

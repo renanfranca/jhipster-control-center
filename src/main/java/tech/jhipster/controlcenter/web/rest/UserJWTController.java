@@ -8,7 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import tech.jhipster.controlcenter.config.Constants;
 import tech.jhipster.controlcenter.security.jwt.JWTFilter;
@@ -22,6 +25,8 @@ import tech.jhipster.controlcenter.web.rest.vm.LoginVM;
 @RequestMapping("/api")
 @Profile("!" + Constants.PROFILE_OAUTH2)
 public class UserJWTController {
+
+    private static final Long USER_ID_DEFAULT_VALUE = 1l;
 
     private final TokenProvider tokenProvider;
 
@@ -39,7 +44,9 @@ public class UserJWTController {
                 login ->
                     authenticationManager
                         .authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()))
-                        .flatMap(auth -> Mono.fromCallable(() -> tokenProvider.createToken(auth, login.isRememberMe())))
+                        .flatMap(
+                            auth -> Mono.fromCallable(() -> tokenProvider.createToken(auth, login.isRememberMe(), USER_ID_DEFAULT_VALUE))
+                        )
             )
             .map(
                 jwt -> {
